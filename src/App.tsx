@@ -1,16 +1,16 @@
 // src/App.tsx
+import styled from '@emotion/styled';
+import { faBell, faCalendar, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import Button from './components/Button';
 import Layout from './components/layout/Layout';
-import { colors } from './helpers/theme/Theme';
-import ColorPalette from './components/color-pallete/ColorPallete';
 
 const App: React.FC = () => {
   return (
     <Layout>
-      <Button>Click Me</Button>
-I
       
+
+
     </Layout>
   );
 };

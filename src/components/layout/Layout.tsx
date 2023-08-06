@@ -3,6 +3,7 @@ import React from 'react';
 import Sidebar from '../side-bar/SideBar';
 import Content from '../content/Content';
 import styled from '@emotion/styled';
+import TopBar from '../top-bar/TopBar';
 
 
 interface DashboardLayoutProps {
@@ -14,7 +15,10 @@ const Layout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <LayoutContainer>
       <Sidebar />
-      <Content>{children}</Content>
+      <Content>
+        <TopBar />
+        {children}
+      </Content>
     </LayoutContainer>
   );
 };

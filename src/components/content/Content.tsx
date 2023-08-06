@@ -12,7 +12,8 @@ const Content: React.FC<ContentProps> = ({ children }) => {
 
 const ContentContainer = styled.div`
   flex: 1;
-  padding: 16px;
+  padding: ${props => props.theme.spacing[8]};
+  background-color: ${props => props.theme.colors.gray[50]};
 `;
 
 export default Content;

@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
 import styled from '@emotion/styled';
-import { faChartBar, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faChartBar, faColonSign, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 
@@ -33,6 +33,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 <MenuLink>
                     <FontAwesomeIcon icon={faChartBar} />
                     <span>Reports</span>
+                </MenuLink>
+
+                <MenuLink>
+                    <FontAwesomeIcon icon={faColonSign} />
+                    <span>Color Pallete </span>
                 </MenuLink>
             </ul>
 
@@ -81,7 +86,7 @@ const MenuLink = styled.li<{ active?: boolean }>`
 const SidebarContainer = styled.div`
     width: 250px;
     background-color: ${props => props.theme.colors.white};
-    border-right: 1px solid ${props => props.theme.colors.gray[300]};
+    border-right: 1.5px solid ${props => props.theme.colors.gray[100]};
     padding: 16px;
 `;
 
