@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     return (
         <SidebarContainer>
             <DashboardTitle>Dashboard</DashboardTitle>
-            <ul>
+            <MenuContainer>
                 <MenuLink active>
                     <FontAwesomeIcon 
                         icon={faHome}
@@ -39,13 +39,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     <FontAwesomeIcon icon={faColonSign} />
                     <span>Color Pallete </span>
                 </MenuLink>
-            </ul>
-
-            {/* add the bottom  add logo and logout */}
-             
-            
-             
-
+            </MenuContainer>
         </SidebarContainer>
     );
 };
@@ -55,6 +49,11 @@ const DashboardTitle = styled.h1`
     font-size: ${props => props.theme.fontSize['2xl']};
     color: ${props => props.theme.colors.gray[800]};
     margin-bottom: ${props => props.theme.spacing[8]};
+`;
+const MenuContainer = styled.ul`
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 `;
 
 
@@ -87,7 +86,7 @@ const SidebarContainer = styled.div`
     width: 250px;
     background-color: ${props => props.theme.colors.white};
     border-right: 1.5px solid ${props => props.theme.colors.gray[100]};
-    padding: 16px;
+    padding: ${props => props.theme.spacing[4]};
 `;
 
 export default Sidebar;
