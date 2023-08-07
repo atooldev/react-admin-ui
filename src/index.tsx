@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import theme from './helpers/theme/Theme';
 import globalStyles from './helpers/theme/GlobalStyles';
+import { BrowserRouter } from "react-router-dom";
 
 
 const root = ReactDOM.createRoot(
@@ -15,8 +16,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Global styles={globalStyles} />
-      <App />
+      <BrowserRouter>
+        <Global styles={globalStyles} />
+        <App />
+      </BrowserRouter>
     </ThemeProvider>,
   </React.StrictMode>
 );

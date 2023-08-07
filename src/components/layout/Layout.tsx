@@ -4,20 +4,20 @@ import Sidebar from '../side-bar/SideBar';
 import Content from '../content/Content';
 import styled from '@emotion/styled';
 import TopBar from '../top-bar/TopBar';
+import { Outlet } from 'react-router-dom';
 
 
 interface DashboardLayoutProps {
   // Add any props you need for the DashboardLayout
-  children: React.ReactNode;
 }
 
-const Layout: React.FC<DashboardLayoutProps> = ({ children }) => {
+const Layout: React.FC<DashboardLayoutProps> = () => {
   return (
     <LayoutContainer>
       <Sidebar />
       <Content>
         <TopBar />
-        {children}
+        <Outlet />
       </Content>
     </LayoutContainer>
   );

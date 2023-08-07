@@ -1,8 +1,9 @@
 // src/components/Sidebar.tsx
 import styled from '@emotion/styled';
-import { faChartBar, faColonSign, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
     // Add any props you need for the Sidebar
@@ -12,33 +13,47 @@ interface SidebarProps {
 
 
 const Sidebar: React.FC<SidebarProps> = () => {
+
+    // react router dom get current path
+    const { pathname } = useLocation();
+
     return (
         <SidebarContainer>
             <DashboardTitle>Dashboard</DashboardTitle>
             <MenuContainer>
-                <MenuLink active>
-                    <FontAwesomeIcon 
-                        icon={faHome}
-                    />
-                    <span>Home</span>
-                </MenuLink>
-                <MenuLink>
-                    <FontAwesomeIcon icon={faShoppingCart} />
-                    <span>Products</span>
-                </MenuLink>
-                <MenuLink>
-                    <FontAwesomeIcon icon={faUsers} />
-                    <span>Customers</span>
-                </MenuLink>
-                <MenuLink>
-                    <FontAwesomeIcon icon={faChartBar} />
-                    <span>Reports</span>
-                </MenuLink>
+                <Link to={'/'}>
+                    <MenuLink active={pathname === '/'}>
+                        <FontAwesomeIcon
+                            icon={faHome}
+                        />
+                        <span>Home</span>
+                    </MenuLink>
+                </Link>
+                <Link to={'/products'}>
+                    <MenuLink active={pathname === '/products'}>
+                        <FontAwesomeIcon icon={faShoppingCart} />
+                        <span>Products</span>
+                    </MenuLink>
+                </Link>
+                <Link to={'/customers'}>
+                    <MenuLink active={pathname === '/customers'}>
+                        <FontAwesomeIcon icon={faUsers} />
+                        <span>Customers</span>
+                    </MenuLink>
+                </Link>
+                <Link to={'/report'}>
+                    <MenuLink active={pathname === '/report'}>
+                        <FontAwesomeIcon icon={faChartBar} />
+                        <span>Reports</span>
+                    </MenuLink>
+                </Link>
 
-                <MenuLink>
-                    <FontAwesomeIcon icon={faColonSign} />
-                    <span>Color Pallete </span>
-                </MenuLink>
+                <Link to={'/pallete'}>
+                    <MenuLink active={pathname === '/pallete'}>
+                        <FontAwesomeIcon icon={faBangladeshiTakaSign} />
+                        <span>Color Pallete </span>
+                    </MenuLink>
+                </Link>
             </MenuContainer>
         </SidebarContainer>
     );
@@ -54,6 +69,10 @@ const MenuContainer = styled.ul`
     list-style-type: none;
     margin: 0;
     padding: 0;
+    a {
+        text-decoration: none;
+        color: ${props => props.theme.colors.gray[400]};
+    }
 `;
 
 
@@ -78,11 +97,13 @@ const MenuLink = styled.li<{ active?: boolean }>`
         background-color: ${props => props.theme.colors.indigo[300]};
         color: ${props => props.theme.colors.white};
     }
+    transition: background-color 0.1s ease;
 
 `;
 
 
 const SidebarContainer = styled.div`
+    height: 100%;
     width: 250px;
     background-color: ${props => props.theme.colors.white};
     border-right: 1.5px solid ${props => props.theme.colors.gray[100]};
