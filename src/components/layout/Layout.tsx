@@ -4,7 +4,7 @@ import Sidebar from '../side-bar/SideBar';
 import Content from '../content/Content';
 import styled from '@emotion/styled';
 import TopBar from '../top-bar/TopBar';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 
 interface DashboardLayoutProps {
@@ -12,6 +12,13 @@ interface DashboardLayoutProps {
 }
 
 const Layout: React.FC<DashboardLayoutProps> = () => {
+
+  const isAuthenticated = localStorage.getItem('isAuthenticated');
+
+  if (!isAuthenticated) {
+    return <Navigate to='/login' />
+  }
+
   return (
     <LayoutContainer>
       <Sidebar />

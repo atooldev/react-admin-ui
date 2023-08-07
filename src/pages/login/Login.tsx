@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -7,6 +7,13 @@ const Login = () => {
     const [userNameError, setUserNameError] = useState<string>('');
     const [passwordError, setPasswordError] = useState<string>('');
     const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem('isAuthenticated');
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [])
 
 
 

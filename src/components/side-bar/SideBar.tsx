@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faDatabase, faHome, faShoppingCart, faSignOut, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
     // Add any props you need for the Sidebar
@@ -16,6 +16,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
     // react router dom get current path
     const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+
+    const handleLogout = () => {
+        localStorage.removeItem('isAuthenticated');
+        navigate('/login');
+    }
+        
 
     return (
         <SidebarContainer>
@@ -65,7 +73,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
 
 
-                <MenuLink>
+                <MenuLink onClick={handleLogout}>
                     <FontAwesomeIcon icon={faSignOut} />
                     <span>Sign out </span>
                 </MenuLink>
