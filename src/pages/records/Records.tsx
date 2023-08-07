@@ -8,7 +8,7 @@ import { Person, makeData } from '../../components/data-grid-table/makeData';
 import StatusCard from '../../components/status-card/StatusCard';
 import { Tab, TabContainer } from '../../components/tab-bar/TabBar';
 
-const Dashboard: React.FC = () => {
+const Records: React.FC = () => {
 
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -152,4 +152,4 @@ export const StatusContainer = styled.div`
 
 
 
-export default Dashboard;
+export default Records;

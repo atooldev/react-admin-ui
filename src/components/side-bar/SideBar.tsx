@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
 import styled from '@emotion/styled';
-import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faDatabase, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -27,6 +27,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
                             icon={faHome}
                         />
                         <span>Home</span>
+                    </MenuLink>
+                </Link>
+                <Link to={'/records'}>
+                    <MenuLink active={pathname === '/records'}>
+                        <FontAwesomeIcon
+                            icon={faDatabase}
+                        />
+                        <span>Records</span>
                     </MenuLink>
                 </Link>
                 <Link to={'/products'}>
