@@ -43,14 +43,14 @@ const CardImage = styled.img`
     width: 100%;
     height: 100%;
     position: absolute;
-    object-fit: cover  ;
     border-radius: ${props => props.theme.borderRadius['lg']}
+    object-fit: contain;
 `;
 
 const CardHeader = styled.div`
     margin: ${props => props.theme.spacing[2]};
+    height: 300px;
     position: relative;
-    height: 200px;
     border-radius: ${props => props.theme.borderRadius['lg']}
 `;
 

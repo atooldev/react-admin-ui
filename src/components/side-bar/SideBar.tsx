@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
 import styled from '@emotion/styled';
-import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faDatabase, faHome, faShoppingCart, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faDatabase, faHome, faShoppingCart, faSignOut, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -62,10 +62,31 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         <span>Color Pallete </span>
                     </MenuLink>
                 </Link>
+
+
+
+                <MenuLink>
+                    <FontAwesomeIcon icon={faSignOut} />
+                    <span>Sign out </span>
+                </MenuLink>
             </MenuContainer>
+
+            <SupContainer>
+                <SupImage src="/sup.png" alt="" />
+                <p>
+                    Do you need help?
+                </p>
+            </SupContainer>
         </SidebarContainer>
     );
 };
+
+const SupImage = styled.img`
+    display: block;
+    object-fit: contain;
+    width: 170px;
+    height:170px;
+`;
 
 
 const DashboardTitle = styled.h1`
@@ -74,6 +95,7 @@ const DashboardTitle = styled.h1`
     margin-bottom: ${props => props.theme.spacing[8]};
 `;
 const MenuContainer = styled.ul`
+    flex: 1;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -116,6 +138,21 @@ const SidebarContainer = styled.div`
     background-color: ${props => props.theme.colors.white};
     border-right: 1.5px solid ${props => props.theme.colors.gray[100]};
     padding: ${props => props.theme.spacing[4]};
+    display: flex;
+    flex-direction: column;
 `;
 
 export default Sidebar;
+
+const SupContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    p {
+        font-size: ${props => props.theme.fontSize['base']};
+        font-weight:600;
+        color: ${props => props.theme.colors.gray[900]};
+        margin-top: ${props => props.theme.spacing[4]};
+    }
+`;

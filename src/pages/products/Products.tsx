@@ -5,38 +5,29 @@ const Products = () => {
     return (
         <Container>
             <Grid
-                columns={3}
+                columns={2}
             >
                 <Card
                     title="Laptop"
                     description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
+                    image="/pr-1.png"
                 />
                 <Card
                     title="Mobile"
                     description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
+                    image="/pr-2.png"
                 />
                 <Card
                     title="Tablet"
                     description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
+                    image="/pr-2.png"
                 />
                 <Card
                     title="Watch"
                     description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
+                    image="/pr-4.png"
                 />
-                <Card
-                    title="Headphone"
-                    description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
-                />
-                <Card
-                    title="Camera"
-                    description="lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptates."
-                    image="https://source.unsplash.com/random"
-                />
+               
             </Grid>
 
         </Container>
