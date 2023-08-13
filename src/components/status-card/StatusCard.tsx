@@ -35,9 +35,9 @@ const variants = {
 }
 type StatusCardProps = {
     title: string;
-    value: string;
+    value?: string;
     description: string;
-    icon: IconProp;
+    icon?: IconProp;
     variant?: keyof typeof variants;
 }
 
@@ -49,10 +49,18 @@ const StatusCard: React.FC<StatusCardProps> = ({ title, value, icon, variant, de
         <StatusCardContainer variant={variant}>
             <StatusCardTitle>{title}</StatusCardTitle>
             <DescriptionContainer>
-                <StatusCardValue variant={variant}>{value}</StatusCardValue>
-                <VerticalDivider />
+                {
+                    !!value && (
+                        <>
+                            <StatusCardValue variant={variant}>{value}</StatusCardValue>
+                            <VerticalDivider />
+
+                        </>
+                    )
+                }
+
                 <StatusCardDescription>{description}</StatusCardDescription>
-                <FontAwesomeIcon icon={icon} />
+                {icon && <FontAwesomeIcon icon={icon} />}
             </DescriptionContainer>
         </StatusCardContainer>
     );

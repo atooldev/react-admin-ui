@@ -15,7 +15,7 @@ const ContentContainer = styled.div`
   padding: ${props => props.theme.spacing[6]};
   height: 100vh;
   overflow-y: auto;
-  background-color: ${props => props.theme.colors.gray[50]};
+  background-color: ${props => props.theme.colors.gray[100]};
 `;
 
 export default Content;

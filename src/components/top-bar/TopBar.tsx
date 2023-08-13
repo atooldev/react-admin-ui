@@ -2,43 +2,55 @@
 import styled from '@emotion/styled';
 import { faBell, faCalendar, faSearch, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { title } from 'process';
 import React from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 
 
 interface TopBarProps {
-    // Add any props you need for the Sidebar
+  // Add any props you need for the Sidebar
 }
 
 const TopBar: React.FC<TopBarProps> = () => {
-    return (
-        <Contianer>
-            <TopBarContainer>
-                <TodayDate>
-                    <FontAwesomeIcon icon={faCalendar} />
-                    October 19, 2021
-                </TodayDate>
+  const { pathname } = useLocation();
+  const date = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const formattedDate = date.charAt(0).toUpperCase() + date.slice(1);
 
-                <RightSideBar>
+  const title = pathname?.split('/').pop();
+  return (
+    <Contianer>
+      <TopBarContainer>
+        <TodayDate>
+          <FontAwesomeIcon icon={faCalendar} />
+          {formattedDate}
+        </TodayDate>
+
+        <RightSideBar>
 
 
-                    <SearchBar>
-                        <FontAwesomeIcon icon={faSearch} />
-                        <input type="text" placeholder="Seach order number or name ... " />
+          <SearchBar>
+            <FontAwesomeIcon icon={faSearch} />
+            <input type="text" placeholder="Seach order number or name ... " />
 
-                    </SearchBar>
+          </SearchBar>
 
-                    <UserMenu>
-                        <FontAwesomeIcon icon={faBell} />
-                        <FontAwesomeIcon icon={faUser} />
-                    </UserMenu>
-                </RightSideBar>
-            </TopBarContainer>
+          <UserMenu>
+            <FontAwesomeIcon icon={faBell} />
+            <FontAwesomeIcon icon={faUser} />
+          </UserMenu>
+        </RightSideBar>
+      </TopBarContainer>
 
-            <PageTitle>
-                Orders 😍
-            </PageTitle>
-        </Contianer>
-    );
+      <PageTitle>
+        {title} 😍
+      </PageTitle>
+    </Contianer>
+  );
 };
 
 

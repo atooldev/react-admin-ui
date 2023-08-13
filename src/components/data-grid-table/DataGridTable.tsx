@@ -25,10 +25,10 @@ import styled from '@emotion/styled'
 
 
 export type DataGridTable = {
-    columnFilters: ColumnFiltersState
+    columnFilters?: ColumnFiltersState
     data: any
-    globalFilter: string
-    columns: ColumnDef<Person, any>[]
+    globalFilter?: string
+    columns: ColumnDef<any>[]
     onColumnFiltersChange?: (columnFilters: ColumnFiltersState) => void
     // setColumnFilters: (columnFilters: ColumnFiltersState) => void
     // setGlobalFilter: (globalFilter: string) => void
@@ -65,13 +65,9 @@ export default function DataGridTable({
         debugColumns: false,
     })
 
-    React.useEffect(() => {
-        if (table.getState().columnFilters[0]?.id === 'fullName') {
-            if (table.getState().sorting[0]?.id !== 'fullName') {
-                table.setSorting([{ id: 'fullName', desc: false }])
-            }
-        }
-    }, [table.getState().columnFilters[0]?.id])
+
+
+
 
     return (
         <DataGridContainer>
@@ -118,7 +114,8 @@ export default function DataGridTable({
                     ))}
                 </StyledTableHeader>
                 <StyleTableBody>
-                    {table.getRowModel().rows.map(row => {
+                    { }
+                    {table.getRowModel().rows?.length ? table.getRowModel().rows.map(row => {
                         return (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map(cell => {
@@ -133,7 +130,14 @@ export default function DataGridTable({
                                 })}
                             </tr>
                         )
-                    })}
+                    })
+                        : <EmptyRow>
+                            <td colSpan={columns.length}>
+                                No data
+                            </td>
+                        </EmptyRow>
+
+                    }
                 </StyleTableBody>
             </StyledTable>
             <PaginationContainer>
@@ -309,7 +313,6 @@ const PaginationContainer = styled.div`
 
 
 const StyledTable = styled.table`
-    height:300px;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -394,5 +397,22 @@ const StyledTableHeader = styled.thead`
             justify-content: center;
             opacity: 0;
         }
+    }
+`;
+
+
+const EmptyRow = styled.tr` 
+
+    //center the empty row
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    td {
+        text-align: center;
+        font-size: ${props => props.theme.fontSize['base']};
+        color: ${props => props.theme.colors.gray[500]};
+    
     }
 `;

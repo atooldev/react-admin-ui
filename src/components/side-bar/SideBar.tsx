@@ -1,13 +1,16 @@
 // src/components/Sidebar.tsx
 import styled from '@emotion/styled';
-import { faBangladeshiTakaSign, faCediSign, faChartBar, faColonSign, faDatabase, faHome, faShoppingCart, faSignOut, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faBangladeshiTakaSign, faChartBar, faChevronDown, faChevronUp, faDatabase, faHome, faShoppingCart, faSignOut, faTable, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useEntitiesList from '../../hooks/entities/useEntities';
 
 interface SidebarProps {
     // Add any props you need for the Sidebar
 }
+
+
 
 
 
@@ -19,64 +22,77 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const navigate = useNavigate();
 
 
+    const { data, error, isLoading } = useEntitiesList();
+
     const handleLogout = () => {
         localStorage.removeItem('isAuthenticated');
         navigate('/login');
     }
-        
+
+
+    const menuData = [
+        {
+            label: "Home",
+            icon: <FontAwesomeIcon icon={faHome} />,
+            link: "/",
+        },
+        {
+            label: "Records",
+            icon: <FontAwesomeIcon icon={faDatabase} />,
+            subItems: data?.map((item, index) => ({
+                label: item.label,
+                icon: <FontAwesomeIcon icon={faTable} />,
+                link: `/records/${item.name}`,
+            }))
+        },
+
+        {
+            label: "Products",
+            icon: <FontAwesomeIcon icon={faShoppingCart} />,
+            link: "/products",
+        },
+        {
+            label: "Customers",
+            icon: <FontAwesomeIcon icon={faUsers} />,
+            link: "/customers",
+        },
+
+        {
+            label: "Reports",
+            icon: <FontAwesomeIcon icon={faChartBar} />,
+            link: "/reports",
+        },
+        {
+            label: "Color Pallete",
+            icon: <FontAwesomeIcon icon={faBangladeshiTakaSign} />,
+            link: "/color-pallete",
+        },
+        {
+            label: "Sign out",
+            icon: <FontAwesomeIcon icon={faSignOut} />,
+            onClick: handleLogout,
+
+        },
+    ]
+
+
+
+
 
     return (
         <SidebarContainer>
             <DashboardTitle>Dashboard</DashboardTitle>
             <MenuContainer>
-                <Link to={'/'}>
-                    <MenuLink active={pathname === '/'}>
-                        <FontAwesomeIcon
-                            icon={faHome}
-                        />
-                        <span>Home</span>
-                    </MenuLink>
-                </Link>
-                <Link to={'/records'}>
-                    <MenuLink active={pathname === '/records'}>
-                        <FontAwesomeIcon
-                            icon={faDatabase}
-                        />
-                        <span>Records</span>
-                    </MenuLink>
-                </Link>
-                <Link to={'/products'}>
-                    <MenuLink active={pathname === '/products'}>
-                        <FontAwesomeIcon icon={faShoppingCart} />
-                        <span>Products</span>
-                    </MenuLink>
-                </Link>
-                <Link to={'/customers'}>
-                    <MenuLink active={pathname === '/customers'}>
-                        <FontAwesomeIcon icon={faUsers} />
-                        <span>Customers</span>
-                    </MenuLink>
-                </Link>
-                <Link to={'/report'}>
-                    <MenuLink active={pathname === '/report'}>
-                        <FontAwesomeIcon icon={faChartBar} />
-                        <span>Reports</span>
-                    </MenuLink>
-                </Link>
 
-                <Link to={'/pallete'}>
-                    <MenuLink active={pathname === '/pallete'}>
-                        <FontAwesomeIcon icon={faBangladeshiTakaSign} />
-                        <span>Color Pallete </span>
-                    </MenuLink>
-                </Link>
-
-
-
-                <MenuLink onClick={handleLogout}>
-                    <FontAwesomeIcon icon={faSignOut} />
-                    <span>Sign out </span>
-                </MenuLink>
+                {menuData.map((item, index) => (
+                    <MenuItem
+                        key={`sideBarMenu-${index}`}
+                        label={item.label}
+                        link={item.link}
+                        onClick={item.onClick}
+                        subItems={item?.subItems}
+                        icon={item.icon} />
+                ))}
             </MenuContainer>
 
             <SupContainer>
@@ -164,3 +180,86 @@ const SupContainer = styled.div`
         margin-top: ${props => props.theme.spacing[4]};
     }
 `;
+
+
+// sample 
+// const menuData = [
+//     {
+//       label: 'Item 1',
+//       subItems: [
+//         { label: 'Sub Item 1.1' },
+//         { label: 'Sub Item 1.2' }
+//       ]
+//     },
+// ]
+
+type MenuItemModel = {
+    label: string;
+    icon?: React.ReactNode;
+    onClick?: () => void;
+    link?: string;
+    subItems?: MenuItemModel[];
+}
+
+
+const MenuItem = ({ label, icon, subItems, onClick, link }: MenuItemModel) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const toggleSubMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+            return;
+        }
+        if (link && !subItems) {
+            navigate(link);
+        }
+        if (subItems) {
+            toggleSubMenu();
+        }
+
+
+    };
+
+    return (
+        <div className="menu-item">
+            <MenuLink onClick={handleClick}>
+                {icon && icon}
+                <span style={{
+                    flex: 1,
+                }}>{label}</span>
+
+                {
+                    subItems && <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} />
+                }
+            </MenuLink>
+            {isOpen && <SubMenu subItems={subItems} />}
+        </div>
+    );
+};
+
+const SubMenu = ({ subItems }: {
+    subItems?: MenuItemModel[];
+}) => {
+    const navigate = useNavigate();
+
+    const handleClick = (link: string) => {
+        navigate(link);
+    };
+    return (
+        <ul className="sub-menu">
+            {subItems?.map((subItem, index) => (
+                <MenuLink
+                    onClick={() => handleClick(subItem.link || '')}
+                    key={index}>
+                    {subItem.icon && subItem.icon}
+                    <span>{subItem.label}</span>
+                </MenuLink>
+            ))}
+        </ul>
+    );
+};

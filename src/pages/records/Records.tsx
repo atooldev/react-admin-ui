@@ -1,144 +1,96 @@
 // src/App.tsx
 import styled from '@emotion/styled';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faEdit, faEye, faRemove } from '@fortawesome/free-solid-svg-icons';
 import { ColumnDef, ColumnFiltersState } from '@tanstack/react-table';
 import React from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DataGridTable from '../../components/data-grid-table/DataGridTable';
-import { Person, makeData } from '../../components/data-grid-table/makeData';
 import StatusCard from '../../components/status-card/StatusCard';
-import { Tab, TabContainer } from '../../components/tab-bar/TabBar';
+import {useRecordList} from '../../hooks/entities/useRecords';
+import theme from '../../helpers/theme/Theme';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Records: React.FC = () => {
 
+    // has :modelName params in the url get it from there
+    let { modelName } = useParams();
 
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
-    const [globalFilter, setGlobalFilter] = React.useState('')
-
-    const columns = React.useMemo<ColumnDef<Person, any>[]>(
-        () => [
-            {
-                accessorKey: 'id',
-                header: () => <span>Index</span>,
-                footer: props => props.column.id,
-            },
-
-            {
-                accessorKey: 'firstName',
-                cell: info => info.getValue(),
-                footer: props => props.column.id,
-            },
-            {
-                accessorFn: row => row.lastName,
-                id: 'lastName',
-                cell: info => info.getValue(),
-                header: () => <span>Last Name</span>,
-                footer: props => props.column.id,
-            },
-            {
-                accessorFn: row => `${row.firstName} ${row.lastName}`,
-                id: 'fullName',
-                header: 'Full Name',
-                cell: info => info.getValue(),
-                footer: props => props.column.id,
-
-            },
-
-            {
-                accessorKey: 'age',
-                header: () => 'Age',
-                footer: props => props.column.id,
-            },
-            {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-            },
-            {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-            },
-            {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-            },
-
-        ],
-        []
-    )
-
-    const [data, setData] = React.useState<Person[]>(() => makeData(100))
+    const { data, error, isLoading } = useRecordList(
+        modelName
+    );
 
 
-    const tabs = [
-        {
-            title: 'All',
-            count: 452,
+    // create columns from the data object keys
+
+    const columns: ColumnDef<any>[] = !!data?.data?.[0] ? Object.keys(data?.data?.[0]).map((key) => {
+        return {
+            accessorKey: key,
+            header: key,
+        }
+    }) : [];
+
+    // add actions column
+    columns.push({
+        accessorKey: 'actions',
+        header: 'Actions',
+        cell: (props) => {
+            console.log(props);
+            return (
+                <ActionContainer>
+                    <Link to={`/records/${modelName}/edit/${props.row.original.id}`}>
+                        <ActionItem>
+                            <FontAwesomeIcon icon={faEdit} />
+                        </ActionItem>
+                    </Link>
+
+                    <Link to={`/records/${modelName}/delete/${props.row.original.id}`}>
+                        <ActionItem variant='danger'>
+                            <FontAwesomeIcon icon={faRemove} />
+                        </ActionItem>
+                    </Link>
+
+                    <Link to={`/records/${modelName}/${props.row.original.id}`}>
+                        <ActionItem variant='secondary'>
+                            <FontAwesomeIcon icon={faEye} />
+                        </ActionItem>
+                    </Link>
+                </ActionContainer>
+            );
         },
-        {
-            title: 'Pending',
-            count: 20,
-        },
-        {
-            title: 'Completed',
-            count: 432,
-        },
-    ];
-    const [activeTab, setActiveTab] = React.useState(0);
+    });
+
+
+
+    if (!data) return null;
 
     return (
         <>
             <StatusContainer >
                 <StatusCard
-                    title="Total Orders"
-                    value="452"
-                    description="Total number of orders"
-                    icon={faBell}
-                    variant="primary"
-                />
-
-                <StatusCard
-                    title="Total Orders"
-                    value="452"
-                    description="Total number of orders"
-                    icon={faBell}
+                    title={`${modelName} Record`}
+                    // value={data?.total?.toString()}
+                    description="All related information about the model"
                     variant="secondary"
                 />
                 <StatusCard
-                    title="Total Orders"
-                    value="452"
-                    description="Total number of orders"
+                    title={"Total Record"}
+                    value={data?.total?.toString()}
+                    description="Total number of Records in the database"
                     icon={faBell}
-                    variant="success"
+                    variant="primary"
                 />
             </StatusContainer>
 
+            <AddNewRecordContainer>
+                <Link to={`/records/${modelName}/create`}>
+                    <AddNewRecord>Add New Record</AddNewRecord>
+                </Link>
+            </AddNewRecordContainer>
 
-            <TabContainer>
-                {
-                    tabs.map((tab, index) => (
-                        <Tab
-                            key={tab.title}
-                            onClick={() => setActiveTab(index)}
-                            active={index === activeTab}
-                        >
-                            {tab.title} ({tab.count})
-                        </Tab>
-                    ))
-                }
-            </TabContainer>
-
-
+            <hr />
             <DataGridTable
                 columns={columns}
-                data={data}
-                columnFilters={columnFilters}
-                onColumnFiltersChange={setColumnFilters}
-                globalFilter={globalFilter}
-            // onGlobalFilterChange={setGlobalFilter}
+                data={data?.data || []}
             />
         </>
     );
@@ -148,6 +100,82 @@ const Records: React.FC = () => {
 export const StatusContainer = styled.div`
   display: flex;
   gap: 16px;
+`;
+
+
+const AddNewRecord = styled.button`
+    background-color: ${theme.colors.primary};
+    color: #fff;
+    border: 1px solid ${theme.colors.primary};
+    padding: ${theme.spacing[3]} ${theme.spacing[6]};
+    border-radius: 8px;
+    font-size: ${theme.fontSize.sm};
+    font-weight: 500;
+    cursor: pointer;
+
+    
+
+    &:hover {
+        background-color: ${theme.colors.indigo[500]};
+        border: 1px solid ${theme.colors.indigo[500]};
+
+    }
+`;
+
+const AddNewRecordContainer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: ${theme.spacing[4]};
+    margin-top: ${theme.spacing[4]};
+`;
+
+
+const ActionContainer = styled.div`
+    display: flex;
+    gap: 16px;
+
+`;
+
+const ActionItem = styled.div<{
+    variant?: 'primary' | 'secondary' | 'danger';
+}>`
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    cursor: pointer;
+    color: ${theme.colors.white};
+    padding: ${theme.spacing[2]} ${theme.spacing[4]};
+    border-radius: ${theme.borderRadius.md};
+    // based on the variant prop change the background color
+    background-color:${props => {
+        switch (props.variant) {
+            case 'primary':
+                return theme.colors.primary;
+            case 'secondary':
+                return theme.colors.indigo[500];
+            case 'danger':
+                return theme.colors.red[500];
+            default:
+                return theme.colors.primary;
+        }
+    }};
+    font-size: ${theme.fontSize.sm};
+    font-weight: 500;
+
+    &:hover {
+        background-color:${props => {
+        switch (props.variant) {
+            case 'primary':
+                return theme.colors.indigo[400];
+            case 'secondary':
+                return theme.colors.indigo[300];
+            case 'danger':
+                return theme.colors.red[300];
+            default:
+                return theme.colors.indigo[400];
+        }
+    }};
+    }
 `;
 
 
