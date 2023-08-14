@@ -12,12 +12,11 @@ export type BaseApiErrorType = {
 };
 
 // all api response type on success and error   
-export type BaseApiResponse<T> = AxiosResponse<T>
+export type BaseApiResponse<T> = AxiosResponse<{
+    data: T;
+}>
 
 // success response type
-export type BaseApiSuccessResponse<T> = BaseApiResponse<T> & {
-    data: T;
-};
 
 // error response type
 export type BaseApiErrorResponse = BaseApiResponse<null> & {
@@ -28,7 +27,7 @@ export type BaseApiErrorResponse = BaseApiResponse<null> & {
 
 
 
-export type BaseApiPaginationResponse<T> = BaseApiResponse<{
+export type BaseApiPaginationResponse<T> = AxiosResponse<{
     data: T[];
     total: number;
     meta: {

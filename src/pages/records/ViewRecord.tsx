@@ -16,7 +16,6 @@ const ViewRecord: React.FC = () => {
 
     if (!data?.data) return null;
 
-    console.log(data.data);
 
     return (
         <ViewContainer>
@@ -28,10 +27,14 @@ const ViewRecord: React.FC = () => {
                     if (typeof data.data[key] === 'object') {
                         const title = Object.keys(data.data[key]).filter(key => key !== 'id' && key !== 'createdAt' && key !== 'updatedAt')[0];
 
+                        const findRelation = data?.data?.["relationsMetadata"]?.find((relation: any) => relation.propertyName === key);
+
+                        if (!findRelation) return null;
+
                         return <Field key={index}>
                             <div>{key}</div>
                             <div>
-                                <Link to={`/records/${key}/${data.data[key].id}`}>{data.data[key][title]}</Link>
+                                <Link to={`/records/${findRelation.model}/${data.data[key].id}`}>{data.data[key][title]}</Link>
                             </div>
                         </Field>
                     }
@@ -50,10 +53,17 @@ const ViewRecord: React.FC = () => {
                         if (data.data[key] === null || typeof data.data[key] !== 'object' || !Array.isArray(data.data[key])) return false;
                         return true;
                     })
+                    .filter(key => {
+                        // skitp relationsMetadata
+                        if (key === 'relationsMetadata') return false;
+                        return true;
+                    })
                     .map((key, index) => {
                         // get first key of the object except id to display it as a title
                         const rows = data?.data[key];
-                        const title = !!rows?.length ? Object.keys(rows?.[0])?.filter(key => key !== 'id' && key !== 'createdAt' && key !== 'updatedAt')?.[0] :null
+                        const title = !!rows?.length ? Object.keys(rows?.[0])?.filter(key => key !== 'id' && key !== 'createdAt' && key !== 'updatedAt')?.[0] : null
+                        const findRelation = data?.data?.["relationsMetadata"]?.find((relation: any) => relation.propertyName === key);
+
                         return (
                             <RelationContainer key={key}>
                                 <h1>{key}</h1>
@@ -67,8 +77,14 @@ const ViewRecord: React.FC = () => {
                                             ...(!!title ? [{
                                                 accessorKey: title,
                                                 header: title,
-                                                }] : []
-                                                )
+                                                cell: (params: any) => {
+                                                    console.log(params)
+                                                    return <Link to={`/records/${findRelation.model}/${params.row?.original.id}`}>{
+                                                        params?.row?.original?.[title]
+                                                    }</Link>
+                                                }
+                                            }] : []
+                                            )
 
                                         ]}
                                         data={rows}

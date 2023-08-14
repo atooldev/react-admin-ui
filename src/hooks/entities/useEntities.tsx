@@ -14,11 +14,12 @@ export const useEntitiesList = () => {
         queryKey: ['entities'],
         queryFn: async () => {
             const response = await EntityService.getAllModels();
-            return response.data?.data;
+            return response.data.data
         }
     });
 
 }
+
 
 
 

@@ -5,6 +5,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import EntityService from "../../services/enitities/EntitiyService";
 import React from "react";
+import { fi } from "@faker-js/faker";
 
 
 
@@ -118,3 +119,17 @@ export const useDeleteRecordMutation = (modelName: string | undefined, recordId:
 
 
 
+export const useSearchRecords = (modelName: string | undefined) => {
+
+    return useQuery({
+        queryKey: ['search', modelName],
+        queryFn: async () => {
+            const response = await EntityService.getModelRecords({
+                modelName: modelName as string,
+                page: 1,
+                perPage: 1000
+            });
+            return response.data
+        }
+    });
+}

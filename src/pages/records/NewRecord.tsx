@@ -2,9 +2,11 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useFieldList } from '../../hooks/entities/useFields';
+import { useFieldList, useGetFormRelationRecords } from '../../hooks/entities/useFields';
 import { FieldModel } from '../../services/enitities/EntitiyServiceModel';
 import { useAddRecordMutation } from '../../hooks/entities/useRecords';
+import { fi } from '@faker-js/faker';
+import RelaitionalSelect from './RelationalSelect';
 
 const NewRecord: React.FC = () => {
     const navigate = useNavigate();
@@ -22,15 +24,18 @@ const NewRecord: React.FC = () => {
         navigate(`/records/${modelName}`)
     }
 
-    if (!data?.data) return null;
+    if (!data?.forms) return null;
+
+    const filteredFields = data?.forms.filter((field) => field.isPrimary === false && field.isBaseDate === false)
+
+
 
     return (
         <NewFieldContainer>
             <h1>New {modelName}</h1>
             <DynamicForm
-
                 handleFormSubmit={handleFormSubmit}
-                fields={data?.data} />
+                fields={filteredFields} />
         </NewFieldContainer>
     )
 }
@@ -59,35 +64,72 @@ const DynamicForm = ({ fields, handleFormSubmit }: {
         handleFormSubmit && handleFormSubmit(formData)
     };
 
+
+    const renderFields = ({
+        item,
+        index
+    }: {
+        item: FieldModel
+        index: number
+    }) => {
+        if (item?.relationsMetadata) {
+            return (
+                <RelaitionalSelect
+                    key={index}
+                    onChange={handleInputChange}
+                    value={formData[item.propertyName] || ''}
+                    item={item} />
+            )
+        }
+        if (item?.type === 'enum' && item?.enums) {
+            return (
+                <div key={index}>
+                    <label htmlFor={item.propertyName}>
+                        {item.propertyName} <span className="required">{item.isNullable ? '' : '*'}</span>
+                    </label>
+                    <select
+                        name={item.propertyName}
+                        required={!item.isNullable}
+                        onChange={handleInputChange}
+                        value={formData[item.propertyName] || ''}
+                    >
+                        <option value="">Select an option</option>
+                        {item?.enums?.map((option, idx) => (
+                            <option key={idx} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )
+        }
+        return (
+            <div key={index}>
+                <label htmlFor={item.propertyName}>
+                    {item.propertyName} <span className="required">{item.isNullable ? '' : '*'}</span>
+                </label>
+                <input
+                    type={item.type}
+                    name={item.propertyName}
+                    required={!item.isNullable}
+                    onChange={handleInputChange}
+                    value={formData[item.propertyName] || ''}
+                />
+
+            </div>
+        )
+
+    }
+
+
+
     return (
         <Form onSubmit={handleSubmit}>
-            {fields.map((field, index) => (
-                <div key={index}>
-                    <label htmlFor={field.name}>{field.name}</label>
-                    {field.enum ? (
-                        <select
-                            name={field.name}
-                            required={field.required}
-                            onChange={handleInputChange}
-                            value={formData[field.name] || ''}
-                        >
-                            <option value="">Select an option</option>
-                            {field.enum.map((option, idx) => (
-                                <option key={idx} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </select>
-                    ) : (
-                        <input
-                            // type={field.type}
-                            name={field.name}
-                            required={field.required}
-                            onChange={handleInputChange}
-                            value={formData[field.name] || ''}
-                        />
-                    )}
-                </div>
+            {fields?.map((field, index) => (
+                renderFields({
+                    item: field,
+                    index
+                })
             ))}
             <button type="submit">Submit</button>
         </Form>
@@ -110,9 +152,14 @@ const Form = styled.form`
     padding: 1rem;
 
     label {
-        display: block;
+        display: flex;
+        gap: 0.5rem;
         font-weight: 600;
         margin-bottom: ${props => props.theme.spacing[2]};
+        .required {
+            color: ${props => props.theme.colors.red[500]};
+        }
+      
     }
 
     div {

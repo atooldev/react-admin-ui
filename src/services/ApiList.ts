@@ -1,6 +1,6 @@
 import Gateway from "../configs/gateway/Gateway"
 import { BaseApiPaginationResponse, BaseApiResponse } from "./ApiModel"
-import { EntityModel, FieldModel } from "./enitities/EntitiyServiceModel"
+import { EntityModel, FieldResponse } from "./enitities/EntitiyServiceModel"
 
 export default {
     // entity
@@ -35,7 +35,7 @@ export default {
         },
         getAllFields: (req: {
             modelName: string;
-        }): Promise<BaseApiPaginationResponse<FieldModel>> => {
+        }): Promise<BaseApiResponse<FieldResponse>> => {
             const url = `/entities/${req.modelName}/fields`
             return Gateway.get(url, {})
         },

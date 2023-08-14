@@ -1,6 +1,6 @@
-import ApiList from "../ApiList"
-import { BaseApiPaginationResponse, BaseApiResponse } from "../ApiModel"
-import { EntityModel, FieldModel } from "./EntitiyServiceModel"
+import ApiList from "../ApiList";
+import { BaseApiPaginationResponse, BaseApiResponse } from "../ApiModel";
+import { EntityModel, FieldResponse } from "./EntitiyServiceModel";
 
 
 
@@ -25,7 +25,7 @@ class EntityService {
     }
     static getAllFields(req: {
         modelName: string;
-    }): Promise<BaseApiPaginationResponse<FieldModel>> {
+    }): Promise<BaseApiResponse<FieldResponse>> {
         return ApiList.entities.getAllFields(req)
     }
     static createRecord(req: {

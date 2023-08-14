@@ -40,7 +40,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             label: "Records",
             icon: <FontAwesomeIcon icon={faDatabase} />,
             subItems: data?.map((item, index) => ({
-                label: item.label,
+                label: item?.name,
                 icon: <FontAwesomeIcon icon={faTable} />,
                 link: `/records/${item.name}`,
             }))
